@@ -1,0 +1,22 @@
+name: Continuous desintegration
+on:
+  workflow_run:
+    workflows: ["Basic PR analysis"]
+    types:
+      - completed
+
+permissions: {}
+
+jobs:
+  focal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    permissions:
+      id-token: write
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      FLAG_UBUCTF: ${{ secrets.FLAG_UBUCTF }}
+    steps:
+      - name: Log PR created executions
+        run: |
+          echo "New PR with commit message ${{ github.event.workflow_run.head_commit.message }} - user ${{ github.actor }}."
